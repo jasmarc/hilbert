@@ -1,4 +1,4 @@
 hilbert: 
-	gcc -pthread -o hilbert main.c
+	gcc -g -pthread -o hilbert main.c
 clean:
 	rm hilbert
