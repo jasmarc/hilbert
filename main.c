@@ -1,24 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define CWID 3
+#define CWID 4
 #define CHGT 3
 
 int func4();
 
 main()
 {
-    short mat[CWID][CHGT], i, j;
+    short mat[CHGT][CWID], i, j;
 
     for (j = 0; j < CHGT; j++)
 	for (i = 0; i < CWID; i++) {
-	    mat[i][j] = j * CHGT + i;
+	    mat[j][i] = j * CWID + i;
 	}
 
     printf(" Initialized data to: ");
     for (j = 0; j < CHGT; j++) {
 	printf("\n");
 	for (i = 0; i < CWID; i++) {
-	    printf("%5.2d", mat[i][j]);
+	    printf("%5.2d", mat[j][i]);
 	}
     }
     printf("\n");
@@ -28,7 +28,7 @@ main()
 
 int func4(short **mat, int width, int height)
 {
-    short i, j, *index[height];
+    short i, j, *index[width];
 
     for (i = 0; i < height; i++)
 	index[i] = (short *) mat + width * i;
@@ -37,7 +37,7 @@ int func4(short **mat, int width, int height)
     for (j = 0; j < height; j++) {
 	printf("\n");
 	for (i = 0; i < width; i++) {
-	    printf("%5.2d", index[i][j]);
+	    printf("%5.2d", index[j][i]);
 	}
     }
     printf("\n");
