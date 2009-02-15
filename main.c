@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define hilbert_size(x) 3 * x + 1
+#define hilbert_size(x) (3 * x + 1)
 
 enum hilbert_types { A, B, C, D };
 
