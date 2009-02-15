@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		08FB7796FE84155DC02AAC07 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		08FB7796FE84155DC02AAC07 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; };
 		964F7B4F0F4642AE0036A544 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		964F7B580F4642D40036A544 /* hilbert */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = hilbert; sourceTree = "<group>"; };
 		C6A0FF2C0290799A04C91782 /* hilbert.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = hilbert.1; sourceTree = "<group>"; };
