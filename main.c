@@ -32,21 +32,24 @@ int main(int argc, char *argv[])
 {
 	char **bar;
 	char **foo;
-	const int order = 2;
-	bar = malloc(hilbert_size(order)*hilbert_size(order));
-	foo = malloc(hilbert_size(order-1)*hilbert_size(order-1));
-	memset(bar, ' ', hilbert_size(order)*hilbert_size(order));
-	memcpy(foo, Dcurve, hilbert_size(order-1)*hilbert_size(order-1));
-	mat_copy(bar, foo, 7, 3, 0, 4);
-	mat_set(bar, 7, 0, 3, '1');
-	memcpy(foo, Acurve, 9);
-	mat_copy(bar, foo, 7, 3, 0, 0);
-	mat_set(bar, 7, 3, 2, '2');
-	mat_copy(bar, foo, 7, 3, 4, 0);
-	mat_set(bar, 7, 6, 3, '3');
-	memcpy(foo, Bcurve, 9);
-	mat_copy(bar, foo, 7, 3, 4, 4);
-	mat_print(bar, 7);
+	int bar_order = 2;
+    int foo_order = bar_order - 1;
+    int bar_size = hilbert_size(bar_order);
+    int foo_size = hilbert_size(foo_order);
+	bar = malloc(bar_size * bar_size);
+	foo = malloc(foo_size * foo_size);
+	memset(bar, ' ', bar_size * bar_size);
+	memcpy(foo, Dcurve, foo_size * foo_size);
+	mat_copy(bar, foo, bar_size, foo_size, 0, 4);
+	mat_set(bar, bar_size, 0, 3, '1');
+	memcpy(foo, Acurve, foo_size * foo_size);
+	mat_copy(bar, foo, bar_size, foo_size, 0, 0);
+	mat_set(bar, bar_size, 3, 2, '2');
+	mat_copy(bar, foo, bar_size, foo_size, 4, 0);
+	mat_set(bar, bar_size, 6, 3, '3');
+	memcpy(foo, Bcurve, foo_size * foo_size);
+	mat_copy(bar, foo, bar_size, foo_size, 4, 4);
+	mat_print(bar, bar_size);
 	return 0;
 }
 

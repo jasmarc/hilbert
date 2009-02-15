@@ -72,19 +72,19 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 256274429;
-			PBXWorkspaceStateSaveDate = 256274429;
+			PBXPerProjectTemplateStateSaveDate = 256414802;
+			PBXWorkspaceStateSaveDate = 256414802;
 		};
 		perUserProjectItems = {
-			9602E7710F4888C2005EE19F /* PBXTextBookmark */ = 9602E7710F4888C2005EE19F /* PBXTextBookmark */;
-			9602E7730F4888CB005EE19F /* PBXTextBookmark */ = 9602E7730F4888CB005EE19F /* PBXTextBookmark */;
-			9602E7750F4888CB005EE19F /* PBXTextBookmark */ = 9602E7750F4888CB005EE19F /* PBXTextBookmark */;
-			9602E7760F4888CB005EE19F /* PBXTextBookmark */ = 9602E7760F4888CB005EE19F /* PBXTextBookmark */;
-			9602E7780F4888CB005EE19F /* PBXTextBookmark */ = 9602E7780F4888CB005EE19F /* PBXTextBookmark */;
-			964F7B540F4642CD0036A544 /* PBXTargetBookmark */ = 964F7B540F4642CD0036A544 /* PBXTargetBookmark */;
-			964F7B560F4642CD0036A544 /* PBXTargetBookmark */ = 964F7B560F4642CD0036A544 /* PBXTargetBookmark */;
-			96EB63A20F46442B002BB783 /* PBXTextBookmark */ = 96EB63A20F46442B002BB783 /* PBXTextBookmark */;
-			96EB63A40F46442B002BB783 /* PBXTextBookmark */ = 96EB63A40F46442B002BB783 /* PBXTextBookmark */;
+			9602E7710F4888C2005EE19F = 9602E7710F4888C2005EE19F /* PBXTextBookmark */;
+			9602E7730F4888CB005EE19F = 9602E7730F4888CB005EE19F /* PBXTextBookmark */;
+			9602E7750F4888CB005EE19F = 9602E7750F4888CB005EE19F /* PBXTextBookmark */;
+			9602E7760F4888CB005EE19F = 9602E7760F4888CB005EE19F /* PBXTextBookmark */;
+			9602E7780F4888CB005EE19F = 9602E7780F4888CB005EE19F /* PBXTextBookmark */;
+			964F7B540F4642CD0036A544 = 964F7B540F4642CD0036A544 /* PBXTargetBookmark */;
+			964F7B560F4642CD0036A544 = 964F7B560F4642CD0036A544 /* PBXTargetBookmark */;
+			96EB63A20F46442B002BB783 = 96EB63A20F46442B002BB783 /* PBXTextBookmark */;
+			96EB63A40F46442B002BB783 = 96EB63A40F46442B002BB783 /* PBXTextBookmark */;
 		};
 		sourceControlManager = 964F7B250F46415D0036A544 /* Source Control */;
 		userBuildSettings = {
@@ -169,6 +169,7 @@
 	};
 	9602E7740F4888CB005EE19F /* main.c */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.c;
 		name = main.c;
 		path = /Users/jason/src/c_pointers/main.c;
 		sourceTree = "<absolute>";
@@ -195,6 +196,7 @@
 	};
 	9602E7770F4888CB005EE19F /* main.c */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.c;
 		name = main.c;
 		path = /Users/jason/src/c_pointers/main.c;
 		sourceTree = "<absolute>";
