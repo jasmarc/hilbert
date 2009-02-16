@@ -34,9 +34,9 @@ int main(int argc, char *argv[])
 {
     hilbert *foo = malloc(sizeof(hilbert));
     pen *p = malloc(sizeof(pen));
-    init(foo, hilbert_size(5));
+    init(foo, hilbert_size(3));
     start(foo, p, BOTTOM_LEFT);
-    do_hilbert(foo, p, 5, C);
+    do_hilbert(foo, p, 3, B);
     print(foo);
     free(foo);
     free(p);
@@ -114,6 +114,12 @@ void do_hilbert(hilbert *hil, pen *p, int order, int type)
         } // switch
     } // if
     else {
+        pen *start = malloc(sizeof(pen));
+        pen *p2 = malloc(sizeof(pen));
+        pen *p3 = malloc(sizeof(pen));
+        pen *p4 = malloc(sizeof(pen));
+        start->x = p->x;
+        start->y = p->y;
         switch (type) {
             case A:
                 do_hilbert(hil, p, order - 1, D);
@@ -132,33 +138,33 @@ void do_hilbert(hilbert *hil, pen *p, int order, int type)
                 break;
             case B:
                 do_hilbert(hil, p, order - 1, C);
-                move(p, UP);
-                mark(hil, p);
-                move(p, UP);
-                do_hilbert(hil, p, order - 1, B);
-                move(p, RIGHT);
-                mark(hil, p);
-                move(p, RIGHT);
-                do_hilbert(hil, p, order - 1, B);
-                move(p, DOWN);
-                mark(hil, p);
-                move(p, DOWN);
-                do_hilbert(hil, p, order - 1, A);
+                move_absolute(p2, start->x, start->y - hilbert_size(order - 1));
+                mark(hil, p2);
+                move(p2, UP);
+                do_hilbert(hil, p2, order - 1, B);
+                move_absolute(p3, start->x + hilbert_size(order - 1), start->y - hilbert_size(order - 1) - 1);
+                mark(hil, p3);
+                move(p3, RIGHT);
+                do_hilbert(hil, p3, order - 1, B);
+                move_absolute(p4, start->x + 2 * hilbert_size(order - 1), start->y - hilbert_size(order - 1));
+                mark(hil, p4);
+                move(p4, DOWN);
+                do_hilbert(hil, p4, order - 1, A);
                 break;
             case C:
                 do_hilbert(hil, p, order - 1, B);
-                move(p, RIGHT);
-                mark(hil, p);
-                move(p, RIGHT);
-                do_hilbert(hil, p, order - 1, C);
-                move(p, UP);
-                mark(hil, p);
-                move(p, UP);
-                do_hilbert(hil, p, order - 1, C);
-                move(p, LEFT);
-                mark(hil, p);
-                move(p, LEFT);
-                do_hilbert(hil, p, order - 1, D);
+                move_absolute(p2, start->x + hilbert_size(order - 1), start->y);
+                mark(hil, p2);
+                move(p2, RIGHT);
+                do_hilbert(hil, p2, order - 1, C);
+                move_absolute(p3, start->x + hilbert_size(order - 1) + 1, start->y - hilbert_size(order - 1));
+                mark(hil, p3);
+                move(p3, UP);
+                do_hilbert(hil, p3, order - 1, C);
+                move_absolute(p4, start->x + hilbert_size(order - 1), start->y - 2 * hilbert_size(order - 1));
+                mark(hil, p4);
+                move(p4, LEFT);
+                do_hilbert(hil, p4, order - 1, D);
                 break;
             case D:
                 do_hilbert(hil, p, order - 1, A);
@@ -247,6 +253,8 @@ void mark(hilbert *hil, pen *p)
 {
     assert(p->x < hil->size);
     assert(p->y < hil->size);
+    assert(p->x >= 0);
+    assert(p->y >= 0);
     hil->buffer[p->x][p->y] = '*';
     return;
 }
