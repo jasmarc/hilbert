@@ -185,6 +185,10 @@ void do_hilbert(hilbert *hil, pen *p, int order, int type)
                 fprintf(stderr, "Unknown hilbert type: %d", type);
                 break;
         } // switch
+        free(start);
+        free(p2);
+        free(p3);
+        free(p4);
     } // else
 }
 
