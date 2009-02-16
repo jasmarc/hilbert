@@ -3,157 +3,250 @@
 #include <stdarg.h>
 #include <string.h>
 #include <math.h>
+#include <assert.h>
 
 #define hilbert_size(x) ((int)pow((double)2,(double)(x+1))-1)
+#define MAX_ORDER 7
+#define MAX_SIZE hilbert_size(MAX_ORDER)
 
-enum hilbert_types { A, B, C, D };
+enum direction { LEFT, RIGHT, UP, DOWN };
+enum curve_type { A, B, C, D };
+enum start_positions { BOTTOM_LEFT, TOP_RIGHT };
 
-const char Bcurve[3][3] = { "***",
-                            "*  ",
-                            "***" };
+typedef struct {
+    char buffer[MAX_SIZE][MAX_SIZE];
+    int size;
+} hilbert;
 
-const char Acurve[3][3] = { "***",
-                            "* *",
-                            "* *" };
+typedef struct {
+    int x, y;
+} pen;
 
-const char Dcurve[3][3] = { "***",
-                            "  *",
-                            "***" };
-
-const char Ccurve[3][3] = { "* *",
-                            "* *",
-                            "***" };
-
-void hilbert(char **dest, int order, int hilbert_type);
-void mat_print(char **mat, int size);
-void mat_set(char **mat, int size, int x, int y, char val);
-void mat_copy(char **dest,  char **src,
-              int d_size,   int s_size,
-              int offset_x, int offset_y);
+void do_hilbert(hilbert *hil, pen *p, int order, int type);
+void init(hilbert *hil, int size);
+void print(hilbert *hil);
+void move_absolute(pen *p, int x, int y);
+void move(pen *p, int dir);
+void start(hilbert *hil, pen *p, int start_pos);
+void mark(hilbert *hil, pen *p);
 
 int main(int argc, char *argv[])
 {
-    // char **bar;
-    // char **foo;
-    // int bar_order = 2;
-    // int foo_order = 1;
-    // int bar_size = hilbert_size(bar_order);
-    // int foo_size = hilbert_size(foo_order);
-    // bar = malloc(bar_size * bar_size);
-    // foo = malloc(foo_size * foo_size);
-    // memset(bar, ' ', bar_size * bar_size);
-    // memcpy(foo, Dcurve, foo_size * foo_size);
-    // mat_copy(bar, foo, bar_size, foo_size, 0, 4);
-    // mat_set(bar, bar_size, 0, 3, '1');
-    // memcpy(foo, Acurve, foo_size * foo_size);
-    // mat_copy(bar, foo, bar_size, foo_size, 0, 0);
-    // mat_set(bar, bar_size, 3, 2, '2');
-    // mat_copy(bar, foo, bar_size, foo_size, 4, 0);
-    // mat_set(bar, bar_size, 6, 3, '3');
-    // memcpy(foo, Bcurve, foo_size * foo_size);
-    // mat_copy(bar, foo, bar_size, foo_size, 4, 4);
-    // mat_print(bar, bar_size);
-    char **foo;
-    foo = malloc(9);
-    hilbert(foo, 1, A);
-    mat_print(foo, 3);
+    hilbert *foo = malloc(sizeof(hilbert));
+    pen *p = malloc(sizeof(pen));
+    init(foo, hilbert_size(5));
+    start(foo, p, BOTTOM_LEFT);
+    do_hilbert(foo, p, 5, C);
+    print(foo);
+    free(foo);
+    free(p);
     return 0;
 }
 
-void hilbert(char **dest, int order, int hilbert_type)
+void do_hilbert(hilbert *hil, pen *p, int order, int type)
 {
-    int size = hilbert_size(order);
-    int i, j;
-    char *index[size];
-
-    for (i = 0; i < size; i++)
-        index[i] = (char *) dest + size * i;
-
+    assert(order > 0);
     if(order == 1) {
-        switch (hilbert_type) {
-             case A:
-                memcpy(index, Acurve, size * size);
-                break;
-            case B:
-                memcpy(index, Bcurve, size * size);
-                break;
-            case C:
-                memcpy(index, Ccurve, size * size);
-                break;
-            case D:
-                memcpy(index, Dcurve, size * size);
-                break; 
-            default:
-                fprintf(stderr, "Unknown hilbert type: %d", hilbert_type);
-                break;
-        }
-    }
-    else if(order > 1) {
-        switch (hilbert_type) {
+        switch (type) {
             case A:
-                ;
+                mark(hil, p);
+                move(p, LEFT);
+                mark(hil, p);
+                move(p, LEFT);
+                mark(hil, p);
+                move(p, DOWN);
+                mark(hil, p);
+                move(p, DOWN);
+                mark(hil, p);
+                move(p, RIGHT);
+                mark(hil, p);
+                move(p, RIGHT);
+                mark(hil, p);
                 break;
             case B:
-                ;
+                mark(hil, p);
+                move(p, UP);
+                mark(hil, p);
+                move(p, UP);
+                mark(hil, p);
+                move(p, RIGHT);
+                mark(hil, p);
+                move(p, RIGHT);
+                mark(hil, p);
+                move(p, DOWN);
+                mark(hil, p);
+                move(p, DOWN);
+                mark(hil, p);
                 break;
             case C:
-                ;
+                mark(hil, p);
+                move(p, RIGHT);
+                mark(hil, p);
+                move(p, RIGHT);
+                mark(hil, p);
+                move(p, UP);
+                mark(hil, p);
+                move(p, UP);
+                mark(hil, p);
+                move(p, LEFT);
+                mark(hil, p);
+                move(p, LEFT);
+                mark(hil, p);
                 break;
             case D:
-                ;
+                mark(hil, p);
+                move(p, DOWN);
+                mark(hil, p);
+                move(p, DOWN);
+                mark(hil, p);
+                move(p, LEFT);
+                mark(hil, p);
+                move(p, LEFT);
+                mark(hil, p);
+                move(p, UP);
+                mark(hil, p);
+                move(p, UP);
+                mark(hil, p);
                 break;
             default:
-                fprintf(stderr, "Unknown hilbert type: %d", hilbert_type);
+                fprintf(stderr, "Unknown hilbert type: %d", type);
                 break;
-        }
-    }
+        } // switch
+    } // if
     else {
-        fprintf(stderr, "Order must be greater than or equal to 1.");
-    }
+        switch (type) {
+            case A:
+                do_hilbert(hil, p, order - 1, D);
+                move(p, LEFT);
+                mark(hil, p);
+                move(p, LEFT);
+                do_hilbert(hil, p, order - 1, A);
+                move(p, DOWN);
+                mark(hil, p);
+                move(p, DOWN);
+                do_hilbert(hil, p, order - 1, A);
+                move(p, RIGHT);
+                mark(hil, p);
+                move(p, RIGHT);
+                do_hilbert(hil, p, order - 1, B);
+                break;
+            case B:
+                do_hilbert(hil, p, order - 1, C);
+                move(p, UP);
+                mark(hil, p);
+                move(p, UP);
+                do_hilbert(hil, p, order - 1, B);
+                move(p, RIGHT);
+                mark(hil, p);
+                move(p, RIGHT);
+                do_hilbert(hil, p, order - 1, B);
+                move(p, DOWN);
+                mark(hil, p);
+                move(p, DOWN);
+                do_hilbert(hil, p, order - 1, A);
+                break;
+            case C:
+                do_hilbert(hil, p, order - 1, B);
+                move(p, RIGHT);
+                mark(hil, p);
+                move(p, RIGHT);
+                do_hilbert(hil, p, order - 1, C);
+                move(p, UP);
+                mark(hil, p);
+                move(p, UP);
+                do_hilbert(hil, p, order - 1, C);
+                move(p, LEFT);
+                mark(hil, p);
+                move(p, LEFT);
+                do_hilbert(hil, p, order - 1, D);
+                break;
+            case D:
+                do_hilbert(hil, p, order - 1, A);
+                move(p, DOWN);
+                mark(hil, p);
+                move(p, DOWN);
+                do_hilbert(hil, p, order - 1, D);
+                move(p, LEFT);
+                mark(hil, p);
+                move(p, LEFT);
+                do_hilbert(hil, p, order - 1, D);
+                move(p, UP);
+                mark(hil, p);
+                move(p, UP);
+                do_hilbert(hil, p, order - 1, C);
+                break;
+            default:
+                fprintf(stderr, "Unknown hilbert type: %d", type);
+                break;
+        } // switch
+    } // else
 }
 
-void mat_print(char **mat, int size)
+void init(hilbert *hil, int size)
 {
-    char i, j, *index[size];
+    memset(hil->buffer, ' ', sizeof(hil->buffer));
+    hil->size = size;
+}
 
-    for (i = 0; i < size; i++)
-        index[i] = (char *) mat + size * i;
-
-    for (i = 0; i < size; i++) {
-        for (j = 0; j < size; j++)
-            printf("%c", index[j][i]);
+void print(hilbert *hil)
+{
+    int i, j;
+    for (i = 0; i < hil->size; i++) {
+        for (j = 0; j < hil->size; j++)
+            printf("%c", hil->buffer[j][i]);
         printf("\n");
     }
 
     return;
 }
 
-void mat_set(char **mat, int size, int x, int y, char val)
+void move_absolute(pen *p, int x, int y)
 {
-    char i, j, *index[size];
-
-    for (i = 0; i < size; i++)
-        index[i] = (char *) mat + size * i;
-
-    index[y][x] = val;
-
+    p->x = x;
+    p->y = y;
     return;
 }
 
-void mat_copy(char **dest,  char **src,
-              int d_size,   int s_size,
-              int offset_x, int offset_y)
+void move(pen *p, int dir)
 {
-    char i, j, *s_index[s_size], *d_index[d_size];
+    switch (dir) {
+        case LEFT:
+            move_absolute(p, p->x - 1, p->y);
+            break;
+        case RIGHT:
+            move_absolute(p, p->x + 1, p->y);
+            break;
+        case UP:
+            move_absolute(p, p->x, p->y - 1);
+            break;
+        case DOWN:
+            move_absolute(p, p->x, p->y + 1);
+            break;
+        default:
+            break;
+    }
+}
 
-    for (i = 0; i < s_size; i++)
-        s_index[i] = (char *) src + s_size * i;
-    for (i = 0; i < d_size; i++)
-        d_index[i] = (char *) dest + d_size * i;
+void start(hilbert *hil, pen *p, int start_pos)
+{
+    if(start_pos == BOTTOM_LEFT) {
+        p->x = 0;
+        p->y = hil->size - 1;
+    }
+    else if(start_pos == TOP_RIGHT) {
+        p->x = hil->size - 1;
+        p->y = 0;
+    }
+    else {
+        fprintf(stderr, "Unknown start position: %d", start_pos);
+    }
+    return;
+}
 
-    for (i = 0; i < s_size; i++)
-        for (j = 0; j < s_size; j++)
-            d_index[offset_y + j][offset_x + i] = s_index[j][i];
-
+void mark(hilbert *hil, pen *p)
+{
+    assert(p->x < hil->size);
+    assert(p->y < hil->size);
+    hil->buffer[p->x][p->y] = '*';
     return;
 }

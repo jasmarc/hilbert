@@ -14,13 +14,37 @@
 			9602E68E0F46753D005EE19F /* hilbert */,
 		);
 		perUserDictionary = {
+			"PBXConfiguration.PBXBreakpointsDataSource.v1:1CA1AED706398EBD00589147" = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXBreakpointsDataSource_BreakpointID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					20,
+					258,
+					20,
+					159,
+					159,
+					89,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXBreakpointsDataSource_ActionID,
+					PBXBreakpointsDataSource_TypeID,
+					PBXBreakpointsDataSource_BreakpointID,
+					PBXBreakpointsDataSource_UseID,
+					PBXBreakpointsDataSource_LocationID,
+					PBXBreakpointsDataSource_ConditionID,
+					PBXBreakpointsDataSource_IgnoreCountID,
+					PBXBreakpointsDataSource_ContinueID,
+				);
+			};
 			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
 				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
 				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					22,
 					300,
-					920,
+					919.58349609375,
 				);
 				PBXFileTableDataSourceColumnsKey = (
 					PBXExecutablesDataSource_ActiveFlagID,
@@ -33,7 +57,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					1032,
+					315,
 					20,
 					48,
 					43,
@@ -72,17 +96,17 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 256414802;
-			PBXWorkspaceStateSaveDate = 256414802;
+			PBXPerProjectTemplateStateSaveDate = 256432497;
+			PBXWorkspaceStateSaveDate = 256432497;
 		};
 		perUserProjectItems = {
-			9602E7710F4888C2005EE19F = 9602E7710F4888C2005EE19F /* PBXTextBookmark */;
 			9602E7730F4888CB005EE19F = 9602E7730F4888CB005EE19F /* PBXTextBookmark */;
 			9602E7750F4888CB005EE19F = 9602E7750F4888CB005EE19F /* PBXTextBookmark */;
 			9602E7760F4888CB005EE19F = 9602E7760F4888CB005EE19F /* PBXTextBookmark */;
 			9602E7780F4888CB005EE19F = 9602E7780F4888CB005EE19F /* PBXTextBookmark */;
 			964F7B540F4642CD0036A544 = 964F7B540F4642CD0036A544 /* PBXTargetBookmark */;
 			964F7B560F4642CD0036A544 = 964F7B560F4642CD0036A544 /* PBXTargetBookmark */;
+			96C6F9BB0F48B752000378BE = 96C6F9BB0F48B752000378BE /* PBXTextBookmark */;
 			96EB63A20F46442B002BB783 = 96EB63A20F46442B002BB783 /* PBXTextBookmark */;
 			96EB63A40F46442B002BB783 = 96EB63A40F46442B002BB783 /* PBXTextBookmark */;
 		};
@@ -92,9 +116,9 @@
 	};
 	08FB7796FE84155DC02AAC07 /* main.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1219, 1666}}";
-			sepNavSelRange = "{2248, 0}";
-			sepNavVisRange = "{1544, 704}";
+			sepNavIntBoundsRect = "{{0, 0}, {1210, 2422}}";
+			sepNavSelRange = "{78, 0}";
+			sepNavVisRange = "{0, 1400}";
 			sepNavWindowFrame = "{{15, 44}, {750, 734}}";
 		};
 	};
@@ -149,14 +173,6 @@
 		path = /Users/jason/src/hilbert/hilbert;
 		sourceTree = "<absolute>";
 	};
-	9602E7710F4888C2005EE19F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "error: array size missing in 'foo'";
-		fRef = 08FB7796FE84155DC02AAC07 /* main.c */;
-		rLen = 1;
-		rLoc = 15;
-		rType = 1;
-	};
 	9602E7730F4888CB005EE19F /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 9602E7740F4888CB005EE19F /* main.c */;
@@ -179,7 +195,7 @@
 		fRef = 08FB7796FE84155DC02AAC07 /* main.c */;
 		name = "main.c: 118";
 		rLen = 0;
-		rLoc = 2248;
+		rLoc = 2003;
 		rType = 0;
 		vrLen = 780;
 		vrLoc = 0;
@@ -208,7 +224,7 @@
 		rLen = 14;
 		rLoc = 380;
 		rType = 0;
-		vrLen = 704;
+		vrLen = 459;
 		vrLoc = 1544;
 	};
 	964F7B250F46415D0036A544 /* Source Control */ = {
@@ -240,6 +256,16 @@
 	964F7B560F4642CD0036A544 /* PBXTargetBookmark */ = {
 		isa = PBXTargetBookmark;
 		trg = 964F7B290F4641940036A544 /* hilbert */;
+	};
+	96C6F9BB0F48B752000378BE /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 08FB7796FE84155DC02AAC07 /* main.c */;
+		name = "main.c: 4";
+		rLen = 0;
+		rLoc = 78;
+		rType = 0;
+		vrLen = 1400;
+		vrLoc = 0;
 	};
 	96EB63A20F46442B002BB783 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
