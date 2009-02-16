@@ -5,6 +5,9 @@
 #include <string.h>
 #include <math.h>
 #include <assert.h>
+#include <inttypes.h>
+#include <sys/types.h>
+#include <limits.h>
 
 #define hilbert_size(x) ((int)pow((double)2,(double)(x+1))-1)
 #define MAX_ORDER 7
@@ -12,7 +15,6 @@
 
 enum direction { LEFT, RIGHT, UP, DOWN };
 enum curve_type { A, B, C, D };
-enum start_positions { BOTTOM_LEFT, TOP_RIGHT };
 
 typedef struct {
     char buffer[MAX_SIZE][MAX_SIZE];
@@ -36,17 +38,27 @@ void init(hilbert *hil, int size);
 void print(hilbert *hil);
 void move_absolute(pen *p, int x, int y);
 void move(pen *p, int dir);
-void start(hilbert *hil, pen *p, int start_pos);
+void start(hilbert *hil, pen *p, int type);
 void mark(hilbert *hil, pen *p);
 
 int main(int argc, char *argv[])
 {
+    int type, order;
+    if(argc != 3 
+        || strlen(argv[1]) > 1
+        || (type = argv[1][0] - 'A') < 0
+        || type > 3
+        || (order = strtol(argv[2], NULL, 10)) <= 0
+        || order > MAX_ORDER) {
+        fprintf(stderr, "Usage:\t%s type order\n\ttype must be A-D.\n\torder must be 1 through %d.\n", argv[0], MAX_ORDER);
+        return 1;
+    }
     hilbert *foo = malloc(sizeof(hilbert));
     pen *p = malloc(sizeof(pen));
-    init(foo, hilbert_size(3));
-    start(foo, p, BOTTOM_LEFT);
+    init(foo, hilbert_size(order));
+    start(foo, p, type);
     thread_data *t = malloc(sizeof(thread_data));
-    set_thread_data(t, foo, p, 3, B);
+    set_thread_data(t, foo, p, order, type);
     do_hilbert(t);
     print(foo);
     free(t);
@@ -295,18 +307,18 @@ void move(pen *p, int dir)
     }
 }
 
-void start(hilbert *hil, pen *p, int start_pos)
+void start(hilbert *hil, pen *p, int type)
 {
-    if(start_pos == BOTTOM_LEFT) {
+    if(type == B || type == C) { // Bottom Left
         p->x = 0;
         p->y = hil->size - 1;
     }
-    else if(start_pos == TOP_RIGHT) {
+    else if(type == A || type == D) { // Top Right
         p->x = hil->size - 1;
         p->y = 0;
     }
     else {
-        fprintf(stderr, "Unknown start position: %d", start_pos);
+        fprintf(stderr, "Unknown type: %d", type);
     }
     return;
 }
