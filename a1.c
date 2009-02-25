@@ -33,7 +33,7 @@ typedef struct {
 } thread_data;
 
 void set_thread_data(thread_data *t, hilbert *hil, pen *p, int order, int type);
-void *do_hilbert(void *t);
+void *do_hilbert(thread_data *t);
 void init(hilbert *hil, int size);
 void print(hilbert *hil);
 void move_absolute(pen *p, int x, int y);
@@ -44,7 +44,7 @@ void mark(hilbert *hil, pen *p);
 int main(int argc, char *argv[])
 {
     int type, order;
-    if(argc != 3
+    if(argc != 3 
         || strlen(argv[1]) > 1
         || (type = argv[1][0] - 'A') < 0
         || type > 3
@@ -57,15 +57,11 @@ int main(int argc, char *argv[])
     pen *p = malloc(sizeof(pen));
     init(foo, hilbert_size(order));
     start(foo, p, type);
-    pthread_t thread;
-    pthread_attr_t attr;
-    thread_data ta;
-    pthread_attr_init(&attr);
-    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-    set_thread_data(&ta, foo, p, order, type);
-    pthread_create(&thread, &attr, do_hilbert, (void *)&ta);
-    pthread_join(thread, NULL);
+    thread_data *t = malloc(sizeof(thread_data));
+    set_thread_data(t, foo, p, order, type);
+    do_hilbert(t);
     print(foo);
+    free(t);
     free(foo);
     free(p);
     return 0;
@@ -80,14 +76,14 @@ void set_thread_data(thread_data *t, hilbert *hil, pen *p, int order, int type)
     return;
 }
 
-void *do_hilbert(void *t)
+void *do_hilbert(thread_data *t)
 {
-    hilbert * hil = ((thread_data *)t)->hil;
-    pen *p = ((thread_data *)t)->p ;
-    int order = ((thread_data *)t)->order;
-    int type = ((thread_data *)t)->type;
+    hilbert * hil = t->hil;
+    pen *p = t->p ;
+    int order = t->order;
+    int type = t->type;
     assert(order > 0);
-    if(order == 1) {
+    if(order == 1) { // base case first
         switch (type) {
             case A:
                 mark(hil, p);
@@ -154,9 +150,7 @@ void *do_hilbert(void *t)
                 break;
         } // switch
     } // if
-    else {
-        pthread_t thread[4];
-        pthread_attr_t attr;
+    else { // then recursive case
         thread_data *ta[4];
         pen *start = malloc(sizeof(pen));
         pen *p2 = malloc(sizeof(pen));
@@ -164,146 +158,98 @@ void *do_hilbert(void *t)
         pen *p4 = malloc(sizeof(pen));
         start->x = p->x;
         start->y = p->y;
-
-        pthread_attr_init(&attr);
-        pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-
         switch (type) {
             case A:
                 ta[0] = malloc(sizeof(thread_data));
                 set_thread_data(ta[0], hil, p, order - 1, D);
-                pthread_create(&thread[0], &attr, do_hilbert, (void *)ta[0]);
-
-                // 1st worker thread
-                move_absolute(p2, start->x - hilbert_size(order - 1), start->y);
-                mark(hil, p2);
-                move(p2, LEFT);
+                do_hilbert(ta[0]); // do this first quadrant recursively
+                move_absolute(p2, start->x - hilbert_size(order - 1), start->y); // move for the next quadrant
+                mark(hil, p2); // mark a star
+                move(p2, LEFT); // move direction
                 ta[1] = malloc(sizeof(thread_data));
                 set_thread_data(ta[1], hil, p2, order - 1, A);
-                pthread_create(&thread[1], &attr, do_hilbert, (void *)ta[1]);
-
-                // 2nd worker thread
+                do_hilbert(ta[1]); // start the next quadrant recursively
                 move_absolute(p3, start->x - hilbert_size(order - 1) - 1, start->y + hilbert_size(order - 1));
                 mark(hil, p3);
                 move(p3, DOWN);
                 ta[2] = malloc(sizeof(thread_data));
                 set_thread_data(ta[2], hil, p3, order - 1, A);
-                pthread_create(&thread[2], &attr, do_hilbert, (void *)ta[2]);
-
-                // 3rd worker thread
+                do_hilbert(ta[2]);
                 move_absolute(p4, start->x - hilbert_size(order - 1), start->y + 2 * hilbert_size(order - 1));
                 mark(hil, p4);
                 move(p4, RIGHT);
                 ta[3] = malloc(sizeof(thread_data));
                 set_thread_data(ta[3], hil, p4, order - 1, B);
-                pthread_create(&thread[3], &attr, do_hilbert, (void *)ta[3]);
-                
-                pthread_join(thread[0], NULL);
-                pthread_join(thread[1], NULL);
-                pthread_join(thread[2], NULL);
-                pthread_join(thread[3], NULL);
+                do_hilbert(ta[3]);
                 break;
             case B:
                 ta[0] = malloc(sizeof(thread_data));
                 set_thread_data(ta[0], hil, p, order - 1, C);
-                pthread_create(&thread[0], &attr, do_hilbert, (void *)ta[0]);
-
-                // 1st worker thread
+                do_hilbert(ta[0]);
                 move_absolute(p2, start->x, start->y - hilbert_size(order - 1));
                 mark(hil, p2);
                 move(p2, UP);
                 ta[1] = malloc(sizeof(thread_data));
                 set_thread_data(ta[1], hil, p2, order - 1, B);
-                pthread_create(&thread[1], &attr, do_hilbert, (void *)ta[1]);
-
-                // 2nd worker thread
+                do_hilbert(ta[1]);
                 move_absolute(p3, start->x + hilbert_size(order - 1), start->y - hilbert_size(order - 1) - 1);
                 mark(hil, p3);
                 move(p3, RIGHT);
                 ta[2] = malloc(sizeof(thread_data));
                 set_thread_data(ta[2], hil, p3, order - 1, B);
-                pthread_create(&thread[2], &attr, do_hilbert, (void *)ta[2]);
-
-                // 3rd worker thread
+                do_hilbert(ta[2]);
                 move_absolute(p4, start->x + 2 * hilbert_size(order - 1), start->y - hilbert_size(order - 1));
                 mark(hil, p4);
                 move(p4, DOWN);
                 ta[3] = malloc(sizeof(thread_data));
                 set_thread_data(ta[3], hil, p4, order - 1, A);
-                pthread_create(&thread[3], &attr, do_hilbert, (void *)ta[3]);
-                
-                pthread_join(thread[0], NULL);
-                pthread_join(thread[1], NULL);
-                pthread_join(thread[2], NULL);
-                pthread_join(thread[3], NULL);
+                do_hilbert(ta[3]);
                 break;
             case C:
                 ta[0] = malloc(sizeof(thread_data));
                 set_thread_data(ta[0], hil, p, order - 1, B);
-                pthread_create(&thread[0], &attr, do_hilbert, (void *)ta[0]);
-
-                // 1st worker thread
+                do_hilbert(ta[0]);
                 move_absolute(p2, start->x + hilbert_size(order - 1), start->y);
                 mark(hil, p2);
                 move(p2, RIGHT);
                 ta[1] = malloc(sizeof(thread_data));
                 set_thread_data(ta[1], hil, p2, order - 1, C);
-                pthread_create(&thread[1], &attr, do_hilbert, (void *)ta[1]);
-
-                // 2nd worker thread
+                do_hilbert(ta[1]);
                 move_absolute(p3, start->x + hilbert_size(order - 1) + 1, start->y - hilbert_size(order - 1));
                 mark(hil, p3);
                 move(p3, UP);
                 ta[2] = malloc(sizeof(thread_data));
                 set_thread_data(ta[2], hil, p3, order - 1, C);
-                pthread_create(&thread[2], &attr, do_hilbert, (void *)ta[2]);
-
-                // 3rd worker thread
+                do_hilbert(ta[2]);
                 move_absolute(p4, start->x + hilbert_size(order - 1), start->y - 2 * hilbert_size(order - 1));
                 mark(hil, p4);
                 move(p4, LEFT);
                 ta[3] = malloc(sizeof(thread_data));
                 set_thread_data(ta[3], hil, p4, order - 1, D);
-                pthread_create(&thread[3], &attr, do_hilbert, (void *)ta[3]);
-                
-                pthread_join(thread[0], NULL);
-                pthread_join(thread[1], NULL);
-                pthread_join(thread[2], NULL);
-                pthread_join(thread[3], NULL);
+                do_hilbert(ta[3]);
                 break;
             case D:
                 ta[0] = malloc(sizeof(thread_data));
                 set_thread_data(ta[0], hil, p, order - 1, A);
-                pthread_create(&thread[0], &attr, do_hilbert, (void *)ta[0]);
-
-                // 1st worker thread
+                do_hilbert(ta[0]);
                 move_absolute(p2, start->x, start->y + hilbert_size(order - 1));
                 mark(hil, p2);
                 move(p2, DOWN);
                 ta[1] = malloc(sizeof(thread_data));
                 set_thread_data(ta[1], hil, p2, order - 1, D);
-                pthread_create(&thread[1], &attr, do_hilbert, (void *)ta[1]);
-
-                // 2nd worker thread
+                do_hilbert(ta[1]);
                 move_absolute(p3, start->x - hilbert_size(order - 1), start->y + hilbert_size(order - 1) + 1);
                 mark(hil, p3);
                 move(p3, LEFT);
                 ta[2] = malloc(sizeof(thread_data));
                 set_thread_data(ta[2], hil, p3, order - 1, D);
-                pthread_create(&thread[2], &attr, do_hilbert, (void *)ta[2]);
-
-                // 3rd worker thread
+                do_hilbert(ta[2]);
                 move_absolute(p4, start->x - 2 * hilbert_size(order - 1), start->y + hilbert_size(order - 1));
                 mark(hil, p4);
                 move(p4, UP);
                 ta[3] = malloc(sizeof(thread_data));
                 set_thread_data(ta[3], hil, p4, order - 1, C);
-                pthread_create(&thread[3], &attr, do_hilbert, (void *)ta[3]);
-                
-                pthread_join(thread[0], NULL);
-                pthread_join(thread[1], NULL);
-                pthread_join(thread[2], NULL);
-                pthread_join(thread[3], NULL);
+                do_hilbert(ta[3]);
                 break;
             default:
                 fprintf(stderr, "Unknown hilbert type: %d", type);
@@ -314,7 +260,6 @@ void *do_hilbert(void *t)
         free(p3);
         free(p4);
     } // else
-    pthread_exit(NULL);
 }
 
 void init(hilbert *hil, int size)
@@ -378,7 +323,7 @@ void start(hilbert *hil, pen *p, int type)
     return;
 }
 
-void mark(hilbert *hil, pen *p)
+void mark(hilbert *hil, pen *p) // this just marks a start where the pen is located
 {
     assert(p->x < hil->size);
     assert(p->y < hil->size);
